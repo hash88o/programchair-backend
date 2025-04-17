@@ -1,23 +1,12 @@
-# Use OpenJDK 17 as base image
-FROM openjdk:17-jdk-slim
-
-# Install Maven
-RUN apt-get update && \
-    apt-get install -y maven && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set working directory
+# Stage 1: Build
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS builder
 WORKDIR /app
-
-# Copy the current directory contents into the container
 COPY . .
-
-# Build the application
 RUN mvn clean package -DskipTests
 
-# Expose port 8080
+# Stage 2: Run
+FROM eclipse-temurin:21-jdk-alpine
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Run the application
-CMD ["java", "-jar", "target/programchair-0.0.1-SNAPSHOT.jar"] 
+ENTRYPOINT ["java", "-jar", "app.jar"] 

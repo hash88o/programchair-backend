@@ -10,8 +10,8 @@ RUN apt-get update && \
 # Set working directory
 WORKDIR /app
 
-# Copy backend directory
-COPY backend/ .
+# Copy the current directory contents into the container
+COPY . .
 
 # Build the application
 RUN mvn clean package -DskipTests

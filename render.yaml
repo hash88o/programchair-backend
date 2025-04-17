@@ -2,7 +2,7 @@ services:
   - type: web
     name: programchair-backend
     env: docker
-    buildCommand: docker build -t programchair-backend .
+    buildCommand: cd backend && docker build -t programchair-backend .
     startCommand: docker run -p $PORT:8080 programchair-backend
     envVars:
       - key: SPRING_DATASOURCE_URL
